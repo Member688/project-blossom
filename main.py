@@ -21,6 +21,9 @@ class Ribbon(object):
     major_segment_scale = 0
     number_of_major_segments = 6
     colour = lime_green
+    segment_large_x = 0
+    segment_small_x = 0
+    lines = []
 
 
     def __init__(self, pos_x, pos_y, width, height, scale):
@@ -31,16 +34,17 @@ class Ribbon(object):
         self.full_scale = scale
         self.colour = lime_green
 
-        major_segment_scale = self.full_scale / self.number_of_major_segments
+        self.segment_x_start = self.pos_x + self.rect_width
+        self.segment_large_x_end = self.segment_x_start - self.rect_width/2
+        self.segment_small_x_end = self.segment_x_start - self.rect_width/4
 
+        major_segment_scale = self.full_scale / self.number_of_major_segments
 
     def update_current_value(self, current_value):
         self.current_value = current_value
 
-
     def calculate_slider(self):
         return 0
-
 
     def draw(self,screen):
         rectangle = [self.pos_x, self.pos_y, self.rect_width, self.rect_height]
@@ -48,15 +52,22 @@ class Ribbon(object):
 
         currentvalue_ratio = int(float(self.current_value) / float(self.full_scale) * float(self.rect_height))
 
-        startpos_x = self.pos_x + self.rect_width
-        startpos_y = self.pos_y + self.rect_height - currentvalue_ratio
+        startpos_x = self.segment_x_start
 
-        endpos_x = startpos_x - self.rect_width/2
-        endpos_y = startpos_y
+        for x in range(self.number_of_major_segments):
 
-        startpos = [startpos_x, startpos_y]
-        endpos = [endpos_x, endpos_y]
-        pygame.draw.line(screen, lime_green, startpos, endpos, self.rect_stroke_width)
+            if (x % 2 == 0) or (x == 0):
+                endpos_x = self.segment_large_x_end
+            else:
+                endpos_x = self.segment_small_x_end
+
+            startpos_y = self.pos_y + self.rect_height - currentvalue_ratio - 20 * x
+            endpos_y = startpos_y
+
+            line_start = [startpos_x, startpos_y]
+            line_end = [endpos_x, endpos_y]
+
+            pygame.draw.line(screen, lime_green, line_start, line_end, self.rect_stroke_width)
 
 
 def main():
