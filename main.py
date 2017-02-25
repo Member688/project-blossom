@@ -14,6 +14,7 @@ COUNTER = 0.0
 
 FONT_SIZE = 14
 
+
 def main():
     black = 0, 0, 0
     cycle_time_us_last_update = 0.0
